@@ -1,5 +1,8 @@
 SHELL := /bin/bash
 
+#always out-of-date
+# .FORCE: ;
+
 NAME := undertest
 SRC_DIR := src
 OBJ_DIR := obj
@@ -13,9 +16,12 @@ OBJECTS := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SOURCES:.c=.o))
 MLX42_REPO = git@github.com:codam-coding-college/MLX42.git
 MLX42_IN := $(shell if [ -d "$(MLX42_DIR)" ]; then echo 1; else echo 0; fi)
 
+#debug output print MLX42_IN
+$(info MLX42_IN: $(MLX42_IN))
+
+#git submodule add $(MLX42_REPO) $(MLX42_DIR)
 ifeq ($(MLX42_IN), 0)
 $(MLX42_DIR):
-	git submodule add $(MLX42_REPO) $(MLX42_DIR)
 	git submodule update --init
 else
 $(MLX42_DIR):
@@ -34,27 +40,27 @@ endif
 
 all: $(MLX42_DIR) $(MLX42) $(NAME)
 
-$(MLX42):
-	@cmake $(MLX42_DIR) -B $(MLX42_DIR)/build
-	@$(MAKE) -C $(MLX42_DIR)/build -j4 --quiet
+$(MLX42): #.FORCE
+	cmake $(MLX42_DIR) -B $(MLX42_DIR)/build
+	$(MAKE) -C $(MLX42_DIR)/build -j4 --quiet
 
 $(NAME): $(OBJ_DIR) $(OBJECTS)
-	@$(CC) $(OBJECTS) $(LFLAGS) -o $(NAME) 
+	$(CC) $(OBJECTS) $(LFLAGS) -o $(NAME) 
 
 $(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
-	@mkdir -p $(dir $@)
-	@$(CC) $(SIZE_FLAGS) $(CFLAGS) $(IFLAGS) -c $< -o $@
+	mkdir -p $(dir $@)
+	$(CC) $(SIZE_FLAGS) $(CFLAGS) $(IFLAGS) -c $< -o $@
 
 clean:
-	@$(MAKE) clean -C $(MLX42_DIR)/build -j4 --quiet
-	@rm -rf $(OBJ_DIR)
+	$(MAKE) clean -C $(MLX42_DIR)/build -j4 --quiet
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	@$(MAKE) clean/fast -C $(MLX42_DIR)/build -j4 --quiet
-	@-rm -f $(NAME)
+	$(MAKE) clean/fast -C $(MLX42_DIR)/build -j4 --quiet
+	-rm -f $(NAME)
 
 re: fclean all
 
