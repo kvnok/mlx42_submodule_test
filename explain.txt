@@ -1,0 +1,9 @@
+basicly make a basic mlx42 program
+a Makefile is needed for the compile instructions
+
+can git clone or call a submodule
+eitherway this receiving of MLX42 files should only happen once
+and this is the first time make is called
+
+in this received MLX42 the builds and cleanup needs to happen like normal
+as if the folder was always there
