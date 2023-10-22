@@ -13,19 +13,19 @@ SOURCES := $(shell find $(SRC_DIR) -type f -name '*.c')
 OBJECTS := $(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SOURCES:.c=.o))
 
 #mlx42 git repo things
-MLX42_REPO = git@github.com:codam-coding-college/MLX42.git
-MLX42_IN := $(shell if [ -d "$(MLX42_DIR)" ]; then echo 1; else echo 0; fi)
+# MLX42_REPO = git@github.com:codam-coding-college/MLX42.git
+# MLX42_IN := $(shell if [ -d "$(MLX42_DIR)" ]; then echo 1; else echo 0; fi)
 
 #debug output print MLX42_IN
-$(info MLX42_IN: $(MLX42_IN))
+# $(info MLX42_IN: $(MLX42_IN))
 
 #git submodule add $(MLX42_REPO) $(MLX42_DIR)
-ifeq ($(MLX42_IN), 0)
-$(MLX42_DIR):
-	git submodule update --init
-else
-$(MLX42_DIR):
-endif
+# ifeq ($(MLX42_IN), 0)
+# $(MLX42_DIR):
+# 	git submodule update --init
+# else
+# $(MLX42_DIR):
+# endif
 
 CC  := cc
 IFLAGS := -Iinclude -I$(MLX42_DIR)/include
@@ -38,7 +38,8 @@ ifeq ($(_DEBUG),1)
 	CFLAGS += -g3 -fsanitize=address
 endif
 
-all: $(MLX42_DIR) $(MLX42) $(NAME)
+#$(MLX42_DIR)
+all: $(MLX42) $(NAME)
 
 $(MLX42): #.FORCE
 	cmake $(MLX42_DIR) -B $(MLX42_DIR)/build
